@@ -1,0 +1,27 @@
+# application-test.yml - SÓ O ESSENCIAL
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+
+  jpa:
+    show-sql: false
+
+  cloud:
+    aws:
+      sqs:
+        endpoint: http://localhost:4566
+      s3:
+        endpoint: http://localhost:4566
+      dynamodb:
+        endpoint: http://localhost:4566
+
+logging:
+  level:
+    root: WARN
+    com.example.saga: INFO
+
+saga:
+  timeout:
+    default-minutes: 1
+  retry:
+    max-attempts: 1

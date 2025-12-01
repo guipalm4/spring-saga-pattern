@@ -1,0 +1,71 @@
+spring:
+  application:
+    name: saga-ecommerce
+
+  datasource:
+    url: jdbc:h2:mem:sagadb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MYSQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  cloud:
+    aws:
+      region:
+        static: us-east-1
+      credentials:
+        access-key: test
+        secret-key: test
+      sqs:
+        endpoint: http://localhost:4566
+      s3:
+        endpoint: http://localhost:4566
+      dynamodb:
+        endpoint: http://localhost:4566
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    metrics:
+      enabled: true
+  metrics:
+    tags:
+      application: saga-ecommerce
+  simple:
+    metrics:
+      export:
+        enabled: true
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
+# Logging essencial
+logging:
+  level:
+    com.guipalm4.sagapatternspring: DEBUG
+    org.springframework.cloud.aws: INFO
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level [%X{sagaId:-}] %logger{36} - %msg%n"
+
+saga:
+  timeout:
+    default-minutes: 5
+  retry:
+    max-attempts: 3
+    backoff-delay: 1000
