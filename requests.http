@@ -1,0 +1,207 @@
+### ===========================================
+### 🚀 SAGA PATTERN SPRING - API REQUESTS
+### ===========================================
+
+### 1. 📊 Health Check
+GET http://localhost:8080/actuator/health
+Accept: application/json
+
+### 2. 🔧 Verificar H2 Console (Browser)
+# http://localhost:8080/h2-console
+# JDBC URL: jdbc:h2:mem:sagadb
+# User: sa
+# Password: (deixar vazio)
+
+### ===========================================
+### 📦 ORDERS - Criar Pedidos
+### ===========================================
+
+### 3. ✅ Criar Pedido #1 (Sucesso)
+POST http://localhost:8080/api/orders
+Content-Type: application/json
+
+{
+  "customerId": "customer-001",
+  "productId": "product-123",
+  "quantity": 2,
+  "amount": 150.00
+}
+
+### 4. ✅ Criar Pedido #2 (Sucesso)
+POST http://localhost:8080/api/orders
+Content-Type: application/json
+
+{
+  "customerId": "customer-002",
+  "productId": "product-456",
+  "quantity": 1,
+  "amount": 299.99
+}
+
+### 5. ✅ Criar Pedido #3 (Quantidade alta para testar estoque)
+POST http://localhost:8080/api/orders
+Content-Type: application/json
+
+{
+  "customerId": "customer-003",
+  "productId": "product-789",
+  "quantity": 100,
+  "amount": 5000.00
+}
+
+### 6. ❌ Criar Pedido Inválido (Teste de erro)
+POST http://localhost:8080/api/orders
+Content-Type: application/json
+
+{
+  "customerId": "",
+  "productId": "product-invalid",
+  "quantity": -1,
+  "amount": 0
+}
+
+### ===========================================
+### �� ORDERS - Consultar Pedidos
+### ===========================================
+
+### 7. 📋 Buscar Pedido por ID (substitua {orderId})
+GET http://localhost:8080/api/orders/5
+Accept: application/json
+
+### 8. 📋 Buscar Pedidos por Cliente
+GET http://localhost:8080/api/orders/customer/customer-001
+Accept: application/json
+
+### 9. 📋 Buscar Pedidos por Status - PENDING
+GET http://localhost:8080/api/orders/status/PENDING
+Accept: application/json
+
+### 10. 📋 Buscar Pedidos por Status - CONFIRMED
+GET http://localhost:8080/api/orders/status/CONFIRMED
+Accept: application/json
+
+### 11. 📋 Buscar Pedidos por Status - CANCELLED
+GET http://localhost:8080/api/orders/status/CANCELLED
+Accept: application/json
+
+### 12. 📋 Buscar Pedidos por Status - SHIPPED
+GET http://localhost:8080/api/orders/status/SHIPPED
+Accept: application/json
+
+### ===========================================
+### 🔄 SAGAS - Monitorar Transações
+### ===========================================
+
+### 13. �� Listar Todas as Sagas
+GET http://localhost:8080/api/sagas
+Accept: application/json
+
+### 14. 🔍 Buscar Status de Saga Específica (substitua {sagaId})
+GET http://localhost:8080/api/sagas/SAGA_ID_AQUI/status
+Accept: application/json
+
+### Exemplo com ID real (copie um sagaId da resposta anterior):
+# GET http://localhost:8080/api/sagas/550e8400-e29b-41d4-a716-446655440000/status
+
+### ===========================================
+### 📊 MÉTRICAS - Monitoramento
+### ===========================================
+
+### 15. 📈 Métricas das Sagas
+GET http://localhost:8080/api/metrics/saga
+Accept: application/json
+
+### 16. 📊 Métricas do Actuator
+GET http://localhost:8080/actuator/metrics
+Accept: application/json
+
+### 17. 🏥 Health Check Detalhado
+GET http://localhost:8080/actuator/health
+Accept: application/json
+
+### ===========================================
+### ❌ CANCELAMENTOS - Testar Cancelamentos
+### ===========================================
+
+### 18. 🚫 Cancelar Pedido (substitua {orderId})
+POST http://localhost:8080/api/orders/1/cancel
+Content-Type: application/json
+
+### ===========================================
+### 🧪 TESTES DE CARGA - Múltiplos Pedidos
+### ===========================================
+
+### 19. 🚀 Pedido Rápido #1
+POST http://localhost:8080/api/orders
+Content-Type: application/json
+
+{
+  "customerId": "load-test-001",
+  "productId": "product-load-1",
+  "quantity": 1,
+  "amount": 50.00
+}
+
+### 20. 🚀 Pedido Rápido #2
+POST http://localhost:8080/api/orders
+Content-Type: application/json
+
+{
+  "customerId": "load-test-002",
+  "productId": "product-load-2",
+  "quantity": 3,
+  "amount": 150.00
+}
+
+### 21. 🚀 Pedido Rápido #3
+POST http://localhost:8080/api/orders
+Content-Type: application/json
+
+{
+  "customerId": "load-test-003",
+  "productId": "product-load-3",
+  "quantity": 5,
+  "amount": 250.00
+}
+
+### ===========================================
+### �� UTILITÁRIOS - Endpoints de Debug
+### ===========================================
+
+### 22. 🗂️ Listar Todos os Endpoints
+GET http://localhost:8080/actuator/mappings
+Accept: application/json
+
+### 23. ⚙️ Informações da Aplicação
+GET http://localhost:8080/actuator/info
+Accept: application/json
+
+### 24. 🌐 Variáveis de Ambiente
+GET http://localhost:8080/actuator/env
+Accept: application/json
+
+### ===========================================
+### �� SEQUÊNCIA DE TESTE RECOMENDADA
+### ===========================================
+
+# 1. Execute Health Check (#1)
+# 2. Crie alguns pedidos (#3, #4, #5)
+# 3. Consulte métricas (#15)
+# 4. Liste todas as sagas (#13)
+# 5. Verifique status de uma saga específica (#14)
+# 6. Consulte pedidos por status (#9, #10)
+# 7. Cancele um pedido (#18)
+# 8. Verifique métricas finais (#15)
+
+### ===========================================
+### 🐛 TROUBLESHOOTING
+### ===========================================
+
+### Se der erro 404, verifique se a aplicação está rodando:
+# curl http://localhost:8080/actuator/health
+
+### Se der erro de conexão, verifique a porta:
+# netstat -an | grep 8080
+
+### Para ver logs em tempo real:
+# docker-compose logs -f saga-app
